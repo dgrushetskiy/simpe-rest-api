@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_DRIVER}://${DB_HOST}:${DB_PORT}/${DB_NAME}?${DB_PARAM}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connectionTimeout: 30000
+      idleTimeout: 30000
+      maxLifetime: 2000000
+      maximumPoolSize: 50
+      minimumIdle: 10
+      poolName: SpringBootJPAHikariCP
+      schema: ${DB_DEFAULT_SCHEMA:main}
+      transaction-isolation: TRANSACTION_READ_COMMITTED
+  jpa:
+    generate-ddl: false
+    hibernate:
+      connection:
+        provider_class: org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        default_schema: ${DB_DEFAULT_SCHEMA}
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        default_batch_fetch_size: 30
+        batch_fetch_style: dynamic
+        query:
+          fail_on_pagination_over_collection_fetch: true
+    show-sql: true
+
+  liquibase:
+    defaultSchema: ${DB_SCHEMA:main}
+    change-log: ${CHANGE_LOG_PATH:classpath:db/db.changelog-master.xml}
+    liquibase-schema: ${DB_LIQUIBASE_SCHEMA:liquibase_schema}
+    user: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    url: ${DB_DRIVER}://${DB_HOST}:${DB_PORT}/${DB_NAME}?${DB_PARAM}

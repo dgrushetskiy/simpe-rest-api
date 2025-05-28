@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="false" scanPeriod="30 seconds">
+    <!--    <property scope="context" resource="application-local.yml"/>-->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %clr(%level) [bfm-planner,%X{traceId},%X{spanId}] %clr(---){faint} %clr([%15.15t]){faint} %logger{36} : %msg %n %wEx</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="CROSS-KEY-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>cross_key_requests.log</file>
+        <encoder>
+            <pattern>%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %clr(%level) [products,%X{traceId},%X{spanId}] %clr(---){faint} %clr([%15.15t]){faint} %logger{36} : CrossKey=%X{CrossKey}{default=Unknown}%n %wEx</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="CROSS-KEY-APPENDER"/>
+        <!--        <appender-ref ref="JSON"/>-->
+    </root>
+</configuration>

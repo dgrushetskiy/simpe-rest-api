@@ -1,0 +1,75 @@
+project:
+  version: '@project.version@'
+validation:
+  enabled: true
+
+app:
+  cors:
+    allowedOrigins: http://127.0.0.1:${SERVER_PORT:8080}, 127.0.0.1:${SERVER_PORT:8080}, https://gothmog.ru, it-gothmog.ru, https://ingress.gothmog.ru, ingress.it-gothmog.ru
+    allowCredentials: true
+  openapi:
+    local-url: ${PROTOCOL:http}://127.0.0.1:${SERVER_PORT:8080}
+    develop-url: ${PROTOCOL:https}://ingress.dev-server-name.ru
+    ift-url: ${PROTOCOL:https}://ingress.ift-server-name.ru
+
+server:
+  port: ${SERVER_PORT:8080}
+  compression:
+    enabled: true
+  servlet:
+    max-http-request-header-size: ${HTTP_MAX_HEADER_SIZE:10MB}
+
+spring:
+  application:
+    name: simpe-rest-api
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:h2}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    time-zone: UTC
+  jmx:
+    enabled: false
+  liquibase:
+    contexts: ${spring.profiles.active}
+    enabled: ${LIQUIBASE_ENABLED:false}
+  main:
+    banner-mode: 'off'
+
+
+springdoc:
+  api-docs:
+    version: OPENAPI_3_0
+    path: /api/v1/simpe-rest-api/api-docs
+  cache:
+    disabled: true
+  swagger-ui:
+    filter: true
+    path: /api/v1/simpe-rest-api/documentation
+    tryItOutEnabled: true
+
+logging:
+  config: ${LOGBACK_CONFIG_FILEPATH:}${LOGBACK_NAME:classpath:logback-spring.xml}
+  level:
+    root: ${LOG_ROOT}
+    web: ${LOG_WEB}
+    ru: ${LOG_RU}
+    org:
+      hibernate:
+        SQL: ${LOG_SQL}
+    com:
+      zaxxer:
+        hikari:
+          HikariConfig: ${LOG_HIKARI}
+
+management:
+  endpoints:
+    web:
+      base-path: /api/v1/simpe-rest-api
+      exposure:
+        include: startup,health,info,metrics,env
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
